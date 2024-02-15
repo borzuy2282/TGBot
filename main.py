@@ -128,5 +128,30 @@ def get_text_messages(message):
         menu(message)
 
 
+@bot.message_handler(content_types=['photo'])
+def photo_handler(message):
+    bot.reply_to(message, 'даун?')
+
+@bot.message_handler(content_types=['sticker'])
+def sticker_handler(message):
+    bot.reply_to(message, 'даун?')
+
+@bot.message_handler(content_types=['voice'])
+def voice_handler(message):
+    bot.reply_to(message, 'даун?')
+
+@bot.message_handler(content_types=['video'])
+def video_handler(message):
+    bot.reply_to(message, 'даун?')
+
+@bot.message_handler(content_types=['animation'])
+def video_handler(message):
+    bot.reply_to(message, 'даун?')
+
+@bot.message_handler(content_types=['video_note'])
+def video_handler(message):
+    bot.reply_to(message, 'даун?')
+
+
 
 bot.polling(none_stop=True, interval=0)
