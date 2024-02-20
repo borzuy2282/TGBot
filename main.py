@@ -5,8 +5,11 @@ print('Here we go')
 
 bot = telebot.TeleBot('6784091371:AAFKg602ndv0ZLs20oPG4gzgrDl7jQicR8g')
 
+user_state = {198781641: "0", 745178113: "0", 596747110: "0", 701101736: "0", 542008688: "0"}
 
 def menu(message):
+    user_id = message.chat.id
+    user_state[user_id] = "1"
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton('Україна🇺🇦')
     btn2 = types.KeyboardButton('Polska🇵🇱')
@@ -15,16 +18,12 @@ def menu(message):
     markup.add(btn1, btn2, btn3, btn4)
     gif = 'gif/dancing-monkeys.mp4'
     with open(gif, 'rb') as gif:
-        bot.send_document(message.from_user.id, gif, reply_markup=markup)
+        bot.send_document(message.chat.id, gif, reply_markup=markup)
 
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    menu(message)
-
-
-@bot.message_handler(content_types=['text'])
-def get_text_messages(message):
+def language(message):
+    user_id = message.chat.id
+    user_state[user_id] = "2"
     if message.text == 'Україна🇺🇦':
         markupUA = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton('Написати боту')
@@ -35,8 +34,8 @@ def get_text_messages(message):
         markupUA.add(btn1, btn2, btn3, btn4, btn5)
         gif = 'gif/ukraine-fun.mp4'
         with open(gif, 'rb') as gif:
-            bot.send_document(message.from_user.id, gif)
-        bot.send_message(message.from_user.id, 'Прошу вибрати шо ви хочете', reply_markup=markupUA)
+            bot.send_document(message.chat.id, gif)
+        bot.send_message(message.chat.id, 'Прошу вибрати шо ви хочете', reply_markup=markupUA)
     elif message.text == 'Polska🇵🇱':
         markupPL = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton('napisać botu')
@@ -47,8 +46,8 @@ def get_text_messages(message):
         markupPL.add(btn1, btn2, btn3, btn4, btn5)
         gif = 'gif/polska.mp4'
         with open(gif, 'rb') as gif:
-            bot.send_document(message.from_user.id, gif)
-        bot.send_message(message.from_user.id, 'Proszę wybrać co pan chce', reply_markup=markupPL)
+            bot.send_document(message.chat.id, gif)
+        bot.send_message(message.chat.id, 'Proszę wybrać co pan chce', reply_markup=markupPL)
     elif message.text == 'Deutschland🇩🇪':
         markupDE = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton('schreibe dem Bot')
@@ -59,8 +58,8 @@ def get_text_messages(message):
         markupDE.add(btn1, btn2, btn3, btn4, btn5)
         gif = 'gif/lenni-schnitzel.mp4'
         with open(gif, 'rb') as gif:
-            bot.send_document(message.from_user.id, gif)
-        bot.send_message(message.from_user.id, 'Bitte wählen Sie aus, was Sie möchten', reply_markup=markupDE)
+            bot.send_document(message.chat.id, gif)
+        bot.send_message(message.chat.id, 'Bitte wählen Sie aus, was Sie möchten', reply_markup=markupDE)
     elif message.text == 'France🇫🇷':
         markupFR = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton('écrire un bot')
@@ -71,60 +70,87 @@ def get_text_messages(message):
         markupFR.add(btn1, btn2, btn3, btn4, btn5)
         gif = 'gif/france-eiffel-tower.mp4'
         with open(gif, 'rb') as gif:
-            bot.send_document(message.from_user.id, gif)
-        bot.send_message(message.from_user.id, 's\'il te plaît, choisis ce que tu veux', reply_markup=markupFR)
-    # else:
-    #     print('refutado 1')
-    #     refutado = 'gif/tony-stark-court.mp4'
-    #     with open(refutado, 'rb') as refutado:
-    #         bot.send_document(message.from_user.id, refutado)
-    #     bot.send_message(message.from_user.id, message.from_user.username + ' додік')
-    elif message.text == 'Написати боту' or message.text == 'napisać botu' or message.text == 'schreibe dem Bot' or message.text == 'écrire un bot':
+            bot.send_document(message.chat.id, gif)
+        bot.send_message(message.chat.id, 's\'il te plaît, choisis ce que tu veux', reply_markup=markupFR)
+    else:
+        print("refutado 2")
+        refutado = 'gif/tony-stark-court.mp4'
+        with open(refutado, 'rb') as refutado:
+            bot.send_document(message.chat.id, refutado)
+        bot.send_message(message.chat.id, message.from_user.username + ' додік')
+        menu(message)
+
+def sending(message):
+    user_id = message.chat.id
+    user_state[user_id] = "0"
+    if message.text == 'Написати боту' or message.text == 'napisać botu' or message.text == 'schreibe dem Bot' or message.text == 'écrire un bot':
         # id bota
         bot.send_message(701101736, "Бот лох\nВід " + message.from_user.username)
         gif = 'gif/bot_govoryt.mp4'
         with open(gif, 'rb') as gif:
-            bot.send_document(message.from_user.id, gif)
-        bot.send_message(message.from_user.id, 'Delivered')
+            bot.send_document(message.chat.id, gif)
+        bot.send_message(message.chat.id, 'Delivered')
         menu(message)
     elif message.text == 'Написати нубу' or message.text == 'napisać nubu' or message.text == 'schreibe an Noob' or message.text == 'écrire à noob':
         # id bota(have to be noob)
         bot.send_message(701101736, "Нуб лох\nВід " + message.from_user.username)
         gif = 'gif/nub_vahui.MP4'
         with open(gif, 'rb') as gif:
-            bot.send_document(message.from_user.id, gif)
-        bot.send_message(message.from_user.id, 'Delivered')
+            bot.send_document(message.chat.id, gif)
+        bot.send_message(message.chat.id, 'Delivered')
         menu(message)
     elif message.text == 'Написати шнюку' or message.text == 'napisać szniuku' or message.text == 'schreib dem Schnatz' or message.text == 'écrire au vif d\'or':
-        # id shnuka
+        # id shnuka 542008688
         bot.send_message(542008688, "Шнюк лох\nВід " + message.from_user.username)
         gif = 'gif/shnyuk_loh.mp4'
         with open(gif, 'rb') as gif:
-            bot.send_document(message.from_user.id, gif)
-        bot.send_message(message.from_user.id, 'Delivered')
+            bot.send_document(message.chat.id, gif)
+        bot.send_message(message.chat.id, 'Delivered')
         menu(message)
     elif message.text == 'Написати блюю' or message.text == 'napisać bluju' or message.text == 'schreibe an Blau' or message.text == 'écrire pour vomir':
         # id shnuka(have to be bluy)
-        bot.send_message(542008688, "Блюй лох\nВід " + message.from_user.username)
+        bot.send_message(701101736, "Блюй лох\nВід " + message.from_user.username)
         gif = 'gif/bluy_i_bot.MP4'
         with open(gif, 'rb') as gif:
-            bot.send_document(message.from_user.id, gif)
-        bot.send_message(message.from_user.id, 'Delivered')
+            bot.send_document(message.chat.id, gif)
+        bot.send_message(message.chat.id, 'Delivered')
         menu(message)
     elif message.text == 'Написати вацкі' or message.text == 'napisać wacky' or message.text == 'Schreiben Sie an Vatsky' or message.text == 'écrire à Vatsky':
         # id shnuka(have to be bluy)
-        bot.send_message(542008688, "Вацкі лох\nВід " + message.from_user.username)
+        bot.send_message(701101736, "Вацкі лох\nВід " + message.from_user.username)
         gif = 'gif/vlad_sose.mp4'
         with open(gif, 'rb') as gif:
-            bot.send_document(message.from_user.id, gif)
-        bot.send_message(message.from_user.id, 'Delivered')
+            bot.send_document(message.chat.id, gif)
+        bot.send_message(message.chat.id, 'Delivered')
         menu(message)
     else:
         print("refutado 2")
         refutado = 'gif/tony-stark-court.mp4'
         with open(refutado, 'rb') as refutado:
-            bot.send_document(message.from_user.id, refutado)
-        bot.send_message(message.from_user.id, message.from_user.username + ' додік')
+            bot.send_document(message.chat.id, refutado)
+        bot.send_message(message.chat.id, message.from_user.username + ' додік')
+        menu(message)
+@bot.message_handler(commands=['start'])
+def start(message):
+    user_id = message.chat.id
+    user_state[user_id] = "1"
+    menu(message)
+
+
+@bot.message_handler(content_types=['text'])
+def get_text_messages(message):
+    user_id = message.chat.id
+    if user_state[user_id] == "1":
+        language(message)
+        # else:
+        #     print('refutado 1')
+        #     refutado = 'gif/tony-stark-court.mp4'
+        #     with open(refutado, 'rb') as refutado:
+        #         bot.send_document(message.from_user.id, refutado)
+        #     bot.send_message(message.from_user.id, message.from_user.username + ' додік')
+    elif user_state[user_id] == "2":
+        sending(message)
+    else:
         menu(message)
 
 
@@ -152,6 +178,8 @@ def video_handler(message):
 def video_handler(message):
     bot.reply_to(message, 'даун?')
 
-
+@bot.message_handler(content_types=['audio'])
+def video_handler(message):
+    bot.reply_to(message, 'даун?')
 
 bot.polling(none_stop=True, interval=0)
