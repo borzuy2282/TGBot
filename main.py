@@ -1,15 +1,15 @@
 import telebot
 from telebot import types
 from dotenv import load_dotenv
-from os import getenv
+from os import environ
 
 load_dotenv()
 
 print('Here we go')
 
-bot = telebot.TeleBot(getenv('BOT_ID'))
+bot = telebot.TeleBot(environ.get('BOT_ID'))
 
-user_state = {int(getenv('ID_OF_DIMA')): "0", int(getenv('ID_OF_DAVID')): "0", int(getenv('ID_OF_VLAD')): "0", int(getenv('ID_OF_TYMOFII')): "0", int(getenv('ID_OF_MAX')): "0"}
+user_state = {int(environ.get('ID_OF_DIMA')): "0", int(environ.get('ID_OF_DAVID')): "0", int(environ.get('ID_OF_VLAD')): "0", int(environ.get('ID_OF_TYMOFII')): "0", int(environ.get('ID_OF_MAX')): "0"}
 
 def menu(message):
     user_id = message.chat.id
@@ -88,35 +88,35 @@ def sending(message):
     user_id = message.chat.id
     user_state[user_id] = "0"
     if message.text == 'Написати боту' or message.text == 'napisać botu' or message.text == 'schreibe dem Bot' or message.text == 'écrire un bot':
-        bot.send_message(int(getenv('ID_OF_TYMOFII')), "Бот лох\nВід " + message.from_user.username)
+        bot.send_message(int(environ.get('ID_OF_TYMOFII')), "Бот лох\nВід " + message.from_user.username)
         gif = 'gif/bot_govoryt.mp4'
         with open(gif, 'rb') as gif:
             bot.send_document(message.chat.id, gif)
         bot.send_message(message.chat.id, 'Delivered')
         menu(message)
     elif message.text == 'Написати нубу' or message.text == 'napisać nubu' or message.text == 'schreibe an Noob' or message.text == 'écrire à noob':
-        bot.send_message(int(getenv('ID_OF_DIMA')), "Нуб лох\nВід " + message.from_user.username)
+        bot.send_message(int(environ.get('ID_OF_DIMA')), "Нуб лох\nВід " + message.from_user.username)
         gif = 'gif/nub_vahui.MP4'
         with open(gif, 'rb') as gif:
             bot.send_document(message.chat.id, gif)
         bot.send_message(message.chat.id, 'Delivered')
         menu(message)
     elif message.text == 'Написати шнюку' or message.text == 'napisać szniuku' or message.text == 'schreib dem Schnatz' or message.text == 'écrire au vif d\'or':
-        bot.send_message(int(getenv('ID_OF_MAX')), "Шнюк лох\nВід " + message.from_user.username)
+        bot.send_message(int(environ.get('ID_OF_MAX')), "Шнюк лох\nВід " + message.from_user.username)
         gif = 'gif/shnyuk_loh.mp4'
         with open(gif, 'rb') as gif:
             bot.send_document(message.chat.id, gif)
         bot.send_message(message.chat.id, 'Delivered')
         menu(message)
     elif message.text == 'Написати блюю' or message.text == 'napisać bluju' or message.text == 'schreibe an Blau' or message.text == 'écrire pour vomir':
-        bot.send_message(int(getenv('ID_OF_DAVID')), "Блюй лох\nВід " + message.from_user.username)
+        bot.send_message(int(environ.get('ID_OF_DAVID')), "Блюй лох\nВід " + message.from_user.username)
         gif = 'gif/bluy_i_bot.MP4'
         with open(gif, 'rb') as gif:
             bot.send_document(message.chat.id, gif)
         bot.send_message(message.chat.id, 'Delivered')
         menu(message)
     elif message.text == 'Написати вацкі' or message.text == 'napisać wacky' or message.text == 'Schreiben Sie an Vatsky' or message.text == 'écrire à Vatsky':
-        bot.send_message(int(getenv('ID_OF_VLAD')), "Вацкі лох\nВід " + message.from_user.username)
+        bot.send_message(int(environ.get('ID_OF_VLAD')), "Вацкі лох\nВід " + message.from_user.username)
         gif = 'gif/vlad_sose.mp4'
         with open(gif, 'rb') as gif:
             bot.send_document(message.chat.id, gif)
