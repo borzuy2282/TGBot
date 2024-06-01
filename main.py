@@ -18,27 +18,22 @@ USER_STATES = {
 
 GUYS = {
     environ.get('ID_OF_DIMA'): {
-        'language': 'Україна🇺🇦',
         'gif': 'gif/nub_vahui.MP4',
         'message': 'Нуб лох',
         'options': ['написати нубу', 'napisać nubu', 'schreibe an Noob', 'écrire à noob']
     }, environ.get('ID_OF_DAVID'): {
-        'language': 'Україна🇺🇦',
         'gif': 'gif/bluy_i_bot.MP4',
         'message': 'Блюй лох',
         'options': ['написати блюю', 'napisać bluju', 'schreibe an Blau', 'écrire pour vomir']
     }, environ.get('ID_OF_VLAD'): {
-        'language': 'Україна🇺🇦',
         'gif': 'gif/vlad_sose.mp4',
         'message': 'Вацкі лох',
         'options': ['написати вацкі', 'napisać wacky', 'Schreiben Sie an Vatsky', 'écrire à Vatsky']
     }, environ.get('ID_OF_TYMOFII'): {
-        'language': 'Україна🇺🇦',
         'gif': 'gif/bot_govoryt.mp4',
         'message': 'Бот лох',
         'options': ['написати боту', 'napisać botu', 'schreibe dem Bot', 'écrire un bot']
     }, environ.get('ID_OF_MAX'): {
-        'language': 'Україна🇺🇦',
         'gif': 'gif/Shnyuk_loh.mp4',
         'message': 'Шнюк лох',
         'options': ['написати шнюку', 'napisać szniuku', 'schreib dem Schnatz', 'écrire au vif d\'or']
@@ -153,6 +148,7 @@ def handle_text_messages(message):
 @bot.message_handler(content_types=['photo', 'sticker', 'voice', 'video', 'animation', 'video_note', 'audio'])
 def handle_other_messages(message):
     bot.reply_to(message, 'даун?')
+    start_menu(message)
 
 
 bot.polling(none_stop=True, interval=0)
