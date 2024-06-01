@@ -77,7 +77,7 @@ def send_message_and_menu(chat_id, text, reply_markup):
 
 def send_document_and_menu(chat_id, document, reply_markup):
     with open(document, 'rb') as gif:
-        bot.send_document(chat_id, gif)
+        bot.send_document(chat_id, gif, reply_markup=reply_markup)
 
 
 def start_menu(message):
@@ -110,7 +110,7 @@ def language_selection(message):
 
 def sending(message):
     user_id = message.chat.id
-    text = message.text.lower()
+    text = message.text
     if_sent = False
     for guy in GUYS:
         if text in GUYS[guy]['options']:
@@ -130,8 +130,10 @@ def sending(message):
         start_menu(message)
 
 
-# Handlers
 print('Here we go')
+
+
+# Handlers
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     start_menu(message)
