@@ -12,6 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Run tests
+        env:
+          BOT_ID: ${{secrets.BOT_ID}}
+          ID_OF_TYMOFII: ${{secrets.ID_OF_TYMOFII}}
+          ID_OF_DIMA: ${{secrets.ID_OF_DIMA}}
+          ID_OF_DAVID: ${{secrets.ID_OF_DAVID}}
+          ID_OF_VLAD: ${{secrets.ID_OF_VLAD}}
+          ID_OF_MAX: ${{secrets.ID_OF_MAX}}
         run: |
           python -m pip install -r requirements.txt
           pytest tests/test_bot.py
