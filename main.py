@@ -17,26 +17,31 @@ USER_STATES = {
 }
 
 GUYS = {
-    int(environ.get('ID_OF_DIMA')): {
+    environ.get('ID_OF_DIMA'): {
         'language': 'Україна🇺🇦',
         'gif': 'gif/nub_vahui.MP4',
-        'message': 'Нуб лох'
-    },int(environ.get('ID_OF_DAVID')): {
+        'message': 'Нуб лох',
+        'options': ['написати нубу', 'napisać nubu', 'schreibe an Noob', 'écrire à noob']
+    }, environ.get('ID_OF_DAVID'): {
         'language': 'Україна🇺🇦',
         'gif': 'gif/bluy_i_bot.MP4',
-        'message': 'Блюй лох'
-    },int(environ.get('ID_OF_VLAD')): {
+        'message': 'Блюй лох',
+        'options': ['написати блюю', 'napisać bluju', 'schreibe an Blau', 'écrire pour vomir']
+    }, environ.get('ID_OF_VLAD'): {
         'language': 'Україна🇺🇦',
         'gif': 'gif/vlad_sose.mp4',
-        'message': 'Вацкі лох'
-    },int(environ.get('ID_OF_TYMOFII')): {
+        'message': 'Вацкі лох',
+        'options': ['написати вацкі', 'napisać wacky', 'Schreiben Sie an Vatsky', 'écrire à Vatsky']
+    }, environ.get('ID_OF_TYMOFII'): {
         'language': 'Україна🇺🇦',
         'gif': 'gif/bot_govoryt.mp4',
-        'message': 'Бот лох'
-    },int(environ.get('ID_OF_MAX')): {
+        'message': 'Бот лох',
+        'options': ['написати боту', 'napisać botu', 'schreibe dem Bot', 'écrire un bot']
+    }, environ.get('ID_OF_MAX'): {
         'language': 'Україна🇺🇦',
         'gif': 'gif/Shnyuk_loh.mp4',
-        'message': 'Шнюк лох'
+        'message': 'Шнюк лох',
+        'options': ['написати шнюку', 'napisać szniuku', 'schreib dem Schnatz', 'écrire au vif d\'or']
     },
 }
 
@@ -68,13 +73,11 @@ LANGUAGES = {
 # Functions
 def send_message_and_menu(chat_id, text, reply_markup):
     bot.send_message(chat_id, text, reply_markup=reply_markup)
-    USER_STATES[chat_id] = "1"
 
 
 def send_document_and_menu(chat_id, document, reply_markup):
     with open(document, 'rb') as gif:
         bot.send_document(chat_id, gif)
-    USER_STATES[chat_id] = "1"
 
 
 def start_menu(message):
@@ -84,7 +87,8 @@ def start_menu(message):
     btn3 = types.KeyboardButton('Deutschland🇩🇪')
     btn4 = types.KeyboardButton('France🇫🇷')
     markup.add(btn1, btn2, btn3, btn4)
-    send_message_and_menu(message.chat.id, 'Here we go', markup)
+    send_document_and_menu(message.chat.id, 'gif/dancing-monkeys.mp4', markup)
+    USER_STATES[message.chat.id] = '1'
 
 
 def language_selection(message):
@@ -97,8 +101,6 @@ def language_selection(message):
             markup.add(types.KeyboardButton(option))
         send_document_and_menu(user_id, options['gif'], markup)
         send_message_and_menu(user_id, options['message'], markup)
-        options = GUYS[user_id]
-        options['language'] = language
         USER_STATES[user_id] = "2"
     else:
         send_document_and_menu(user_id, 'gif/tony-stark-court.mp4', None)
@@ -109,27 +111,27 @@ def language_selection(message):
 def sending(message):
     user_id = message.chat.id
     text = message.text.lower()
-    recipients = {
-        'написати боту': environ.get('ID_OF_TYMOFII'),
-        'написати нубу': environ.get('ID_OF_DIMA'),
-        'написати шнюку': environ.get('ID_OF_MAX'),
-        'написати блюю': environ.get('ID_OF_DAVID'),
-        'написати вацкі': environ.get('ID_OF_VLAD'),
-    }
-    if text in recipients:
-        recipient_id = int(recipients[text])
-        bot.send_message(recipient_id, f'{text.capitalize()} лох\nВід {message.from_user.username}')
-        gif = f'gif/{text.replace(" ", "_").lower()}.MP4'
-        send_document_and_menu(user_id, gif, None)
-        bot.send_message(user_id, 'Delivered')
-        start_menu(message)
-    else:
+    if_sent = False
+    for guy in GUYS:
+        if text in GUYS[guy]['options']:
+            options = GUYS[guy]
+            recipient_id = int(guy)
+            ready_message = options['message']
+            bot.send_message(recipient_id, f'{ready_message}\nВід {message.from_user.username}')
+            gif = options['gif']
+            send_document_and_menu(user_id, gif, None)
+            bot.send_message(user_id, 'Delivered')
+            if_sent = True
+            start_menu(message)
+            break
+    if not if_sent:
         send_document_and_menu(user_id, 'gif/tony-stark-court.mp4', None)
         bot.send_message(user_id, message.from_user.username + ' додік')
         start_menu(message)
 
 
 # Handlers
+print('Here we go')
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     start_menu(message)
