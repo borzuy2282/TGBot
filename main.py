@@ -5,174 +5,150 @@ from os import environ
 
 load_dotenv()
 
-print('Here we go')
-
 bot = telebot.TeleBot(environ.get('BOT_ID'))
 
-user_state = {int(environ.get('ID_OF_DIMA')): "0", int(environ.get('ID_OF_DAVID')): "0", int(environ.get('ID_OF_VLAD')): "0", int(environ.get('ID_OF_TYMOFII')): "0", int(environ.get('ID_OF_MAX')): "0"}
+# Constants
+USER_STATES = {
+    int(environ.get('ID_OF_DIMA')): "0",
+    int(environ.get('ID_OF_DAVID')): "0",
+    int(environ.get('ID_OF_VLAD')): "0",
+    int(environ.get('ID_OF_TYMOFII')): "0",
+    int(environ.get('ID_OF_MAX')): "0"
+}
 
-def menu(message):
-    user_id = message.chat.id
-    user_state[user_id] = "1"
+GUYS = {
+    int(environ.get('ID_OF_DIMA')): {
+        'language': 'Україна🇺🇦',
+        'gif': 'gif/nub_vahui.MP4',
+        'message': 'Нуб лох'
+    },int(environ.get('ID_OF_DAVID')): {
+        'language': 'Україна🇺🇦',
+        'gif': 'gif/bluy_i_bot.MP4',
+        'message': 'Блюй лох'
+    },int(environ.get('ID_OF_VLAD')): {
+        'language': 'Україна🇺🇦',
+        'gif': 'gif/vlad_sose.mp4',
+        'message': 'Вацкі лох'
+    },int(environ.get('ID_OF_TYMOFII')): {
+        'language': 'Україна🇺🇦',
+        'gif': 'gif/bot_govoryt.mp4',
+        'message': 'Бот лох'
+    },int(environ.get('ID_OF_MAX')): {
+        'language': 'Україна🇺🇦',
+        'gif': 'gif/Shnyuk_loh.mp4',
+        'message': 'Шнюк лох'
+    },
+}
+
+LANGUAGES = {
+    'Україна🇺🇦': {
+        'keyboard': ['написати боту', 'написати нубу', 'написати шнюку', 'написати блюю', 'написати вацкі'],
+        'gif': 'gif/ukraine-fun.mp4',
+        'message': 'Прошу вибрати шо ви хочете'
+    },
+    'Polska🇵🇱': {
+        'keyboard': ['napisać botu', 'napisać nubu', 'napisać szniuku', 'napisać bluju', 'napisać wacky'],
+        'gif': 'gif/polska.mp4',
+        'message': 'Proszę wybrać co pan chce'
+    },
+    'Deutschland🇩🇪': {
+        'keyboard': ['schreibe dem Bot', 'schreibe an Noob', 'schreib dem Schnatz', 'schreibe an Blau',
+                     'Schreiben Sie an Vatsky'],
+        'gif': 'gif/lenni-schnitzel.mp4',
+        'message': 'Bitte wählen Sie aus, was Sie möchten'
+    },
+    'France🇫🇷': {
+        'keyboard': ['écrire un bot', 'écrire à noob', 'écrire au vif d\'or', 'écrire pour vomir', 'écrire à Vatsky'],
+        'gif': 'gif/france-eiffel-tower.mp4',
+        'message': 's\'il te plaît, choisis ce que tu veux'
+    }
+}
+
+
+# Functions
+def send_message_and_menu(chat_id, text, reply_markup):
+    bot.send_message(chat_id, text, reply_markup=reply_markup)
+    USER_STATES[chat_id] = "1"
+
+
+def send_document_and_menu(chat_id, document, reply_markup):
+    with open(document, 'rb') as gif:
+        bot.send_document(chat_id, gif)
+    USER_STATES[chat_id] = "1"
+
+
+def start_menu(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     btn1 = types.KeyboardButton('Україна🇺🇦')
     btn2 = types.KeyboardButton('Polska🇵🇱')
     btn3 = types.KeyboardButton('Deutschland🇩🇪')
     btn4 = types.KeyboardButton('France🇫🇷')
     markup.add(btn1, btn2, btn3, btn4)
-    gif = 'gif/dancing-monkeys.mp4'
-    with open(gif, 'rb') as gif:
-        bot.send_document(message.chat.id, gif, reply_markup=markup)
+    send_message_and_menu(message.chat.id, 'Here we go', markup)
 
 
-def language(message):
+def language_selection(message):
     user_id = message.chat.id
-    user_state[user_id] = "2"
-    if message.text == 'Україна🇺🇦':
-        markupUA = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton('Написати боту')
-        btn2 = types.KeyboardButton('Написати нубу')
-        btn3 = types.KeyboardButton('Написати шнюку')
-        btn4 = types.KeyboardButton('Написати блюю')
-        btn5 = types.KeyboardButton('Написати вацкі')
-        markupUA.add(btn1, btn2, btn3, btn4, btn5)
-        gif = 'gif/ukraine-fun.mp4'
-        with open(gif, 'rb') as gif:
-            bot.send_document(message.chat.id, gif)
-        bot.send_message(message.chat.id, 'Прошу вибрати шо ви хочете', reply_markup=markupUA)
-    elif message.text == 'Polska🇵🇱':
-        markupPL = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton('napisać botu')
-        btn2 = types.KeyboardButton('napisać nubu')
-        btn3 = types.KeyboardButton('napisać szniuku')
-        btn4 = types.KeyboardButton('napisać bluju')
-        btn5 = types.KeyboardButton('napisać wacky')
-        markupPL.add(btn1, btn2, btn3, btn4, btn5)
-        gif = 'gif/polska.mp4'
-        with open(gif, 'rb') as gif:
-            bot.send_document(message.chat.id, gif)
-        bot.send_message(message.chat.id, 'Proszę wybrać co pan chce', reply_markup=markupPL)
-    elif message.text == 'Deutschland🇩🇪':
-        markupDE = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton('schreibe dem Bot')
-        btn2 = types.KeyboardButton('schreibe an Noob')
-        btn3 = types.KeyboardButton('schreib dem Schnatz')
-        btn4 = types.KeyboardButton('schreibe an Blau')
-        btn5 = types.KeyboardButton('Schreiben Sie an Vatsky')
-        markupDE.add(btn1, btn2, btn3, btn4, btn5)
-        gif = 'gif/lenni-schnitzel.mp4'
-        with open(gif, 'rb') as gif:
-            bot.send_document(message.chat.id, gif)
-        bot.send_message(message.chat.id, 'Bitte wählen Sie aus, was Sie möchten', reply_markup=markupDE)
-    elif message.text == 'France🇫🇷':
-        markupFR = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton('écrire un bot')
-        btn2 = types.KeyboardButton('écrire à noob')
-        btn3 = types.KeyboardButton('écrire au vif d\'or')
-        btn4 = types.KeyboardButton('écrire pour vomir')
-        btn5 = types.KeyboardButton('écrire à Vatsky')
-        markupFR.add(btn1, btn2, btn3, btn4, btn5)
-        gif = 'gif/france-eiffel-tower.mp4'
-        with open(gif, 'rb') as gif:
-            bot.send_document(message.chat.id, gif)
-        bot.send_message(message.chat.id, 's\'il te plaît, choisis ce que tu veux', reply_markup=markupFR)
+    language = message.text
+    if language in LANGUAGES:
+        options = LANGUAGES[language]
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        for option in options['keyboard']:
+            markup.add(types.KeyboardButton(option))
+        send_document_and_menu(user_id, options['gif'], markup)
+        send_message_and_menu(user_id, options['message'], markup)
+        options = GUYS[user_id]
+        options['language'] = language
+        USER_STATES[user_id] = "2"
     else:
-        print("refutado 2")
-        refutado = 'gif/tony-stark-court.mp4'
-        with open(refutado, 'rb') as refutado:
-            bot.send_document(message.chat.id, refutado)
-        bot.send_message(message.chat.id, message.from_user.username + ' додік')
-        menu(message)
+        send_document_and_menu(user_id, 'gif/tony-stark-court.mp4', None)
+        bot.send_message(user_id, message.from_user.username + ' додік')
+        start_menu(message)
+
 
 def sending(message):
     user_id = message.chat.id
-    user_state[user_id] = "0"
-    if message.text == 'Написати боту' or message.text == 'napisać botu' or message.text == 'schreibe dem Bot' or message.text == 'écrire un bot':
-        bot.send_message(int(environ.get('ID_OF_TYMOFII')), "Бот лох\nВід " + message.from_user.username)
-        gif = 'gif/bot_govoryt.mp4'
-        with open(gif, 'rb') as gif:
-            bot.send_document(message.chat.id, gif)
-        bot.send_message(message.chat.id, 'Delivered')
-        menu(message)
-    elif message.text == 'Написати нубу' or message.text == 'napisać nubu' or message.text == 'schreibe an Noob' or message.text == 'écrire à noob':
-        bot.send_message(int(environ.get('ID_OF_DIMA')), "Нуб лох\nВід " + message.from_user.username)
-        gif = 'gif/nub_vahui.MP4'
-        with open(gif, 'rb') as gif:
-            bot.send_document(message.chat.id, gif)
-        bot.send_message(message.chat.id, 'Delivered')
-        menu(message)
-    elif message.text == 'Написати шнюку' or message.text == 'napisać szniuku' or message.text == 'schreib dem Schnatz' or message.text == 'écrire au vif d\'or':
-        bot.send_message(int(environ.get('ID_OF_MAX')), "Шнюк лох\nВід " + message.from_user.username)
-        gif = 'gif/shnyuk_loh.mp4'
-        with open(gif, 'rb') as gif:
-            bot.send_document(message.chat.id, gif)
-        bot.send_message(message.chat.id, 'Delivered')
-        menu(message)
-    elif message.text == 'Написати блюю' or message.text == 'napisać bluju' or message.text == 'schreibe an Blau' or message.text == 'écrire pour vomir':
-        bot.send_message(int(environ.get('ID_OF_DAVID')), "Блюй лох\nВід " + message.from_user.username)
-        gif = 'gif/bluy_i_bot.MP4'
-        with open(gif, 'rb') as gif:
-            bot.send_document(message.chat.id, gif)
-        bot.send_message(message.chat.id, 'Delivered')
-        menu(message)
-    elif message.text == 'Написати вацкі' or message.text == 'napisać wacky' or message.text == 'Schreiben Sie an Vatsky' or message.text == 'écrire à Vatsky':
-        bot.send_message(int(environ.get('ID_OF_VLAD')), "Вацкі лох\nВід " + message.from_user.username)
-        gif = 'gif/vlad_sose.mp4'
-        with open(gif, 'rb') as gif:
-            bot.send_document(message.chat.id, gif)
-        bot.send_message(message.chat.id, 'Delivered')
-        menu(message)
+    text = message.text.lower()
+    recipients = {
+        'написати боту': environ.get('ID_OF_TYMOFII'),
+        'написати нубу': environ.get('ID_OF_DIMA'),
+        'написати шнюку': environ.get('ID_OF_MAX'),
+        'написати блюю': environ.get('ID_OF_DAVID'),
+        'написати вацкі': environ.get('ID_OF_VLAD'),
+    }
+    if text in recipients:
+        recipient_id = int(recipients[text])
+        bot.send_message(recipient_id, f'{text.capitalize()} лох\nВід {message.from_user.username}')
+        gif = f'gif/{text.replace(" ", "_").lower()}.MP4'
+        send_document_and_menu(user_id, gif, None)
+        bot.send_message(user_id, 'Delivered')
+        start_menu(message)
     else:
-        print("refutado 2")
-        refutado = 'gif/tony-stark-court.mp4'
-        with open(refutado, 'rb') as refutado:
-            bot.send_document(message.chat.id, refutado)
-        bot.send_message(message.chat.id, message.from_user.username + ' додік')
-        menu(message)
+        send_document_and_menu(user_id, 'gif/tony-stark-court.mp4', None)
+        bot.send_message(user_id, message.from_user.username + ' додік')
+        start_menu(message)
+
+
+# Handlers
 @bot.message_handler(commands=['start'])
-def start(message):
-    user_id = message.chat.id
-    user_state[user_id] = "1"
-    menu(message)
+def handle_start(message):
+    start_menu(message)
 
 
 @bot.message_handler(content_types=['text'])
-def get_text_messages(message):
+def handle_text_messages(message):
     user_id = message.chat.id
-    if user_state[user_id] == "1":
-        language(message)
-    elif user_state[user_id] == "2":
+    if USER_STATES[user_id] == "1":
+        language_selection(message)
+    elif USER_STATES[user_id] == "2":
         sending(message)
     else:
-        menu(message)
+        start_menu(message)
 
 
-@bot.message_handler(content_types=['photo'])
-def photo_handler(message):
+@bot.message_handler(content_types=['photo', 'sticker', 'voice', 'video', 'animation', 'video_note', 'audio'])
+def handle_other_messages(message):
     bot.reply_to(message, 'даун?')
 
-@bot.message_handler(content_types=['sticker'])
-def sticker_handler(message):
-    bot.reply_to(message, 'даун?')
-
-@bot.message_handler(content_types=['voice'])
-def voice_handler(message):
-    bot.reply_to(message, 'даун?')
-
-@bot.message_handler(content_types=['video'])
-def video_handler(message):
-    bot.reply_to(message, 'даун?')
-
-@bot.message_handler(content_types=['animation'])
-def video_handler(message):
-    bot.reply_to(message, 'даун?')
-
-@bot.message_handler(content_types=['video_note'])
-def video_handler(message):
-    bot.reply_to(message, 'даун?')
-
-@bot.message_handler(content_types=['audio'])
-def video_handler(message):
-    bot.reply_to(message, 'даун?')
 
 bot.polling(none_stop=True, interval=0)
