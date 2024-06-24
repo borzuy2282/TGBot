@@ -34,7 +34,7 @@ GUYS = {
         'message': 'Бот лох',
         'options': ['написати боту', 'napisać botu', 'schreibe dem Bot', 'écrire un bot']
     }, environ.get('ID_OF_MAX'): {
-        'gif': 'gif/Shnyuk_loh.mp4',
+        'gif': 'gif/shnyuk_loh.mp4',
         'message': 'Шнюк лох',
         'options': ['написати шнюку', 'napisać szniuku', 'schreib dem Schnatz', 'écrire au vif d\'or']
     },
